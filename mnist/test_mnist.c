@@ -78,6 +78,7 @@ static void test_mnist_open()
    //free
    mnist_free(x);
    mnist_free(y);
+   mnist_free(z);
 }
 
 //test three cases with k = 80
@@ -113,6 +114,7 @@ static void test_mnist_open_sample()
    //free
    mnist_free(x);
    mnist_free(y);
+   mnist_free(z);
 }
 
 static void test_mnist_create()
@@ -144,30 +146,37 @@ static void test_mnist_image_count()
       mnist_dataset_handle v;
    };
    struct E tests[] = {
+      {"train", 60000, MNIST_DATASET_INVALID},
       {"t10k", 10000, MNIST_DATASET_INVALID},
    };
 
    //should not equal MNIST_DATASET_INVALID
+   mnist_dataset_handle x;
+   x = mnist_open(tests[0].s);
+   CU_ASSERT_NOT_EQUAL(x, tests[0].v); 
+   CU_ASSERT_EQUAL(mnist_image_count(x), tests[0].k);       //image count should equal    
+
+   //should not equal MNIST_DATASET_INVALID
    mnist_dataset_handle y;
-   y = mnist_open(tests[0].s);
-   CU_ASSERT_NOT_EQUAL(y, tests[0].v);  
-   CU_ASSERT_EQUAL(mnist_image_count(y), tests[0].k);         //image count should equal 
+   y = mnist_open(tests[1].s);
+   CU_ASSERT_NOT_EQUAL(y, tests[1].v);  
+   CU_ASSERT_EQUAL(mnist_image_count(y), tests[1].k);         //image count should equal 
 
 
    //free
+   mnist_free(x);
    mnist_free(y);  
 
-
-   //test open_sample with random k
-   for (unsigned int c=0; c<3; ++c)
+   //test random k
+   for (unsigned int c=0; c<COUNT; ++c)
    {
       //generate random x and y
       srand(time(NULL));
-      unsigned int k = (rand()%100);
+      unsigned int k = (rand()%60000);
 
       //test with open_sample
       mnist_dataset_handle z;
-      z = mnist_open_sample("t10k", k);   
+      z = mnist_open_sample("train", k);   
       
       CU_ASSERT_EQUAL(mnist_image_count(z), k);
 
@@ -283,7 +292,7 @@ static void test_mnist_set_image_label()
    //test invalid image set
    mnist_image_handle wrong = MNIST_IMAGE_INVALID;
    out = mnist_set_image_label(wrong,1);
-   CU_ASSERT(out<0);   
+   assert(out<0);   
 
    //open t10k
    mnist_dataset_handle z = mnist_open("t10k");
@@ -296,7 +305,7 @@ static void test_mnist_set_image_label()
 
    //test valid set label
    out = mnist_set_image_label(h,1);
-   CU_ASSERT(out>=0);   
+   assert(out>=0);   
 
    mnist_free(z);  
 }
@@ -313,7 +322,7 @@ static void test_mnist_image_next()
    CU_ASSERT_NOT_EQUAL(h, MNIST_IMAGE_INVALID);
 
    //continue next until the last one
-   for(int c=1; c<10000; c++)
+   for(int c=0; c<10000; c++)
    {
       h = mnist_image_next(h);
    }
@@ -382,7 +391,9 @@ static void test_mnist_image_remove()
    //get the second
    mnist_image_handle tmp;
    tmp = mnist_image_next(h);
-   h = mnist_image_remove(z,h); //remove first image data
+
+   h = mnist_image_remove(z,mnist_image_begin(z)); //remove first image data
+
    CU_ASSERT_EQUAL(tmp,h); //test next then previous
 
    mnist_free(z);  
@@ -412,7 +423,6 @@ static void test_mnist_save()
       mnist_free(x);
 	}
  
-	//invalid case
    mnist_dataset_handle y = MNIST_DATASET_INVALID;
    CU_ASSERT_EQUAL(mnist_save(y, "incorrect"), false);
 }
@@ -468,7 +478,5 @@ int main()
    CU_cleanup_registry();
    return CU_get_error();
 }
-
-
 
 
