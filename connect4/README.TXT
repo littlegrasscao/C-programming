@@ -1,6 +1,7 @@
 To run the game, download the folder and in the terminal type:
 suncao@linux3:~/connect4$ make game
 suncao@linux3:~/connect4$ ./game
+
 The game requires user to enter height, width and run. If choose a Computer AI, recommend 4*4 board with 3 runs.(Take less time) 
 Player Yellow is 1 and Player Blue is 2.
 """"
@@ -56,7 +57,7 @@ The recurssion steps as soon as there is a winner, so it is not necessary to fil
 
 
 
-To make the game last longer even if AI will lose is add a level parameter. 
+To make the game last longer even if AI will lose is adding a level parameter. 
    int size = board_get_height(b) * board_get_width(b);
    //check for winning
    if(res == 1){
