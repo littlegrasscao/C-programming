@@ -1,6 +1,6 @@
 To run the game, download the folder and in the terminal type:
-suncao@linux3:~/connect4$ make game
-suncao@linux3:~/connect4$ ./game
+xxx@linux3:~/connect4$ make game
+xxx@linux3:~/connect4$ ./game
 
 The game requires user to enter height, width and run. If choose a Computer AI, recommend 4*4 board with 3 runs.(Take less time) 
 Player Yellow is 1 and Player Blue is 2.
