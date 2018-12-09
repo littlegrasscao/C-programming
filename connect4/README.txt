@@ -51,7 +51,7 @@ In the recurssion:
 2. When it is AI's turn, pick the maximum score among all the possible positions and make a move for AI on that position.
 3. When it is opponent's turn, pick the minimum score among all the possible positions and make a move for opponent on that position.
 
-The recurssion steps as soon as there is a winner, so it is not necessary to fill the board every time.
+The recurssion stops as soon as there is a winner, so it is not necessary to fill the board every time.
 
 
 
